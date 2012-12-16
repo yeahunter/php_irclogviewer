@@ -70,9 +70,7 @@ if(!empty($_GET))
             $logkiirlesz .= "<pre>";
             // echo "<pre>";
             $dh = fopen($holalog2,"r");
-            $logkiir = fread($dh,524288);
-            $logkiir = preg_replace("/</", "&lt;", $logkiir);
-            $logkiir = preg_replace("/>/", "&gt;", $logkiir);
+            $logkiir = htmlspecialchars(fread($dh,524288));
             $logkiir = preg_replace("/\n/", "<br/>\n", $logkiir);
             $logkiir = preg_split("/\n/", $logkiir);
             $logkiir_counter = count($logkiir)-2;
