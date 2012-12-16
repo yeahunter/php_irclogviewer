@@ -29,12 +29,10 @@ if(!empty($_GET))
         )
     {
         $segedtomb =  array_keys($tomb[$_GET["Network"]][$_GET["Year"]][$_GET["Month"]]);
-        // var_dump ( $segedtomb );
         sort($segedtomb);
         for ($i = 0; $i <= count($segedtomb); $i++) {
             $logkiirlesz .= "<a href=\"".$webpath."?Network=".$_GET["Network"]."&Year=".$_GET["Year"]."&Month=".$_GET["Month"]."&Day=".$segedtomb[$i]."\">".$segedtomb[$i]."</a><br/>\n";
         }
-        // echo "asd";
     }
     elseif (isset($_GET["Network"]) && isset($_GET["Year"]) && isset($_GET["Month"]) && isset($_GET["Day"]) && !isset($_GET["Channel"])
         && array_key_exists($_GET["Network"], $tomb) && array_key_exists($_GET["Year"], $tomb[$_GET["Network"]])
@@ -44,7 +42,6 @@ if(!empty($_GET))
     {
         $segedtomb =  array_values($tomb[$_GET["Network"]][$_GET["Year"]][$_GET["Month"]][$_GET["Day"]]);
         sort($segedtomb);
-        // var_dump($tomb[$_GET["Network"]][$_GET["Year"]][$_GET["Month"]][$_GET["Day"]]);
         for ($i = 0; $i <= count($segedtomb); $i++) {
             if ($segedtomb[$i] != "") {
                 $linklesz = preg_replace("/\#/", "!pound", $segedtomb[$i]); // Kodolja a # jelet mert az anchor miatt bekavar.
@@ -63,12 +60,11 @@ if(!empty($_GET))
         $logfile = preg_replace("/!pound/", "#", $_GET["Channel"]);
         $logfile = preg_replace("/!plus/", "+", $logfile);
         $holalog2 = $holalog.$_GET["Network"]."_".$logfile."_".$_GET["Year"].$_GET["Month"].$_GET["Day"].".log";
-        // echo $holalog;
+
         if(file_exists($holalog2))
         {
             $ittaszoveg = $holalog2;
             $logkiirlesz .= "<pre>";
-            // echo "<pre>";
             $dh = fopen($holalog2,"r");
             $logkiir = htmlspecialchars(fread($dh,524288));
             $logkiir = preg_replace("/\n/", "<br/>\n", $logkiir);
@@ -78,25 +74,21 @@ if(!empty($_GET))
             {
                 $anchor = $ii+1;
                 $logkiirlesz .= "<a name=\"".$anchor."\" href=\"".$_SERVER["REQUEST_URI"]."#".$anchor."\">".$anchor."</a>\t".fixEncoding($logkiir[$ii]);
-                // $logkiirlesz .= "<a name=\"".$anchor."\" href=\"?".$_SERVER["QUERY_STRING"]."#".$anchor."\">".$anchor."</a>\t".fixEncoding($logkiir[$ii]);
-                // echo "<a name=\"".$anchor."\" href=\"".$_SERVER["PHP_SELF"]."?".$_SERVER["QUERY_STRING"]."#".$anchor."\">".$anchor."</a>\t".fixEncoding($logkiir[$ii]);
             }
             $logkiirlesz .= "</pre>";
-            // echo "</pre>";
         }
-        else { echo "<meta http-equiv='Refresh' content='0; URL=index.php'>"; }
+        else
+            echo "<meta http-equiv='Refresh' content='0; URL=".$webpath."'>";
     }
-    else {
-        echo "<meta http-equiv='Refresh' content='0; URL=index.php'>";
-    }
+    else
+        echo "<meta http-equiv='Refresh' content='0; URL=".$webpath."'>";
 }
 else {
-$segedtomb =  array_keys($tomb);
-sort($segedtomb);
-for ($i = 0; $i <= count($tomb); $i++) {
-    $logkiirlesz .=  "<a href=\"".$webpath."?Network=".$segedtomb[$i]."\">".$segedtomb[$i]."</a><br/>\n";
-}
-// var_dump ( $tomb["Rizon"]["2012"]["06"] );
+    $segedtomb =  array_keys($tomb);
+    sort($segedtomb);
+    for ($i = 0; $i <= count($tomb); $i++) {
+        $logkiirlesz .=  "<a href=\"".$webpath."?Network=".$segedtomb[$i]."\">".$segedtomb[$i]."</a><br/>\n";
+    }
 }
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
