@@ -3,24 +3,43 @@ include "conf.php";
 include "func.php";
 if(!empty($_GET))
 {
+    if (isset($_GET["Network"])) {
+        $network = $_GET["Network"];
+    }
+    if (isset($_GET["Year"])) {
+        $year = $_GET["Year"];
+    }
+    if (isset($_GET["Month"])) {
+        $month = $_GET["Month"];
+    }
+    if (isset($_GET["Day"])) {
+        $day = $_GET["Day"];
+    }
+    if (isset($_GET["Channel"])) {
+        $channel = $_GET["Channel"];
+    }
     if (isset($_GET["Network"]) && !isset($_GET["Year"]) && !isset($_GET["Month"]) && !isset($_GET["Day"]) && !isset($_GET["Channel"])
         && array_key_exists($_GET["Network"], $tomb)
         )
     {
-        $segedtomb =  array_keys($tomb[$_GET["Network"]]);
-        sort($segedtomb);
-        for ($i = 0; $i <= count($segedtomb); $i++) {
-            $logkiirlesz .= "<a href=\"".$webpath."?Network=".$_GET["Network"]."&Year=".$segedtomb[$i]."\">".$segedtomb[$i]."</a><br/>\n";
+        $yearsArray = array_keys($tomb[$network]);
+        sort($yearsArray);
+        foreach($yearsArray as $year) {
+            if (!empty($year)) {
+                $logkiirlesz .= "<a href=\"".$webpath."?Network=".$network."&Year=".$year."\">".$year."</a><br/>\n";
+            }
         }
     }
     elseif (isset($_GET["Network"]) && isset($_GET["Year"]) && !isset($_GET["Month"]) && !isset($_GET["Day"]) && !isset($_GET["Channel"])
         && array_key_exists($_GET["Network"], $tomb) && array_key_exists($_GET["Year"], $tomb[$_GET["Network"]])
         )
     {
-        $segedtomb =  array_keys($tomb[$_GET["Network"]][$_GET["Year"]]);
-        sort($segedtomb);
-        for ($i = 0; $i <= count($segedtomb); $i++) {
-            $logkiirlesz .= "<a href=\"".$webpath."?Network=".$_GET["Network"]."&Year=".$_GET["Year"]."&Month=".$segedtomb[$i]."\">".$segedtomb[$i]."</a><br/>\n";
+        $monthsArray = array_keys($tomb[$network][$year]);
+        sort($monthsArray);
+        foreach($monthsArray as $month) {
+            if (!empty($month)) {
+                $logkiirlesz .= "<a href=\"".$webpath."?Network=".$network."&Year=".$year."&Month=".$month."\">".$month."</a><br/>\n";
+            }
         }
     }
     elseif (isset($_GET["Network"]) && isset($_GET["Year"]) && isset($_GET["Month"]) && !isset($_GET["Day"]) && !isset($_GET["Channel"])
@@ -28,10 +47,12 @@ if(!empty($_GET))
         && array_key_exists($_GET["Month"], $tomb[$_GET["Network"]][$_GET["Year"]])
         )
     {
-        $segedtomb =  array_keys($tomb[$_GET["Network"]][$_GET["Year"]][$_GET["Month"]]);
-        sort($segedtomb);
-        for ($i = 0; $i <= count($segedtomb); $i++) {
-            $logkiirlesz .= "<a href=\"".$webpath."?Network=".$_GET["Network"]."&Year=".$_GET["Year"]."&Month=".$_GET["Month"]."&Day=".$segedtomb[$i]."\">".$segedtomb[$i]."</a><br/>\n";
+        $daysArray = array_keys($tomb[$network][$year][$month]);
+        sort($daysArray);
+        foreach($daysArray as $day) {
+            if (!empty($day)) {
+                $logkiirlesz .= "<a href=\"".$webpath."?Network=".$network."&Year=".$year."&Month=".$month."&Day=".$day."\">".$day."</a><br/>\n";
+            }
         }
     }
     elseif (isset($_GET["Network"]) && isset($_GET["Year"]) && isset($_GET["Month"]) && isset($_GET["Day"]) && !isset($_GET["Channel"])
@@ -40,13 +61,13 @@ if(!empty($_GET))
         && array_key_exists($_GET["Day"], $tomb[$_GET["Network"]][$_GET["Year"]][$_GET["Month"]])
         )
     {
-        $segedtomb =  array_values($tomb[$_GET["Network"]][$_GET["Year"]][$_GET["Month"]][$_GET["Day"]]);
-        sort($segedtomb);
-        for ($i = 0; $i <= count($segedtomb); $i++) {
-            if ($segedtomb[$i] != "") {
-                $linklesz = preg_replace("/\#/", "!pound", $segedtomb[$i]); // Kodolja a # jelet mert az anchor miatt bekavar.
-                $linklesz = preg_replace("/\+/", "!plus", $linklesz);       // Atalakitjuk a + jelet mert ezt atkene.
-                $logkiirlesz .= "<a href=\"".$webpath."?Network=".$_GET["Network"]."&Year=".$_GET["Year"]."&Month=".$_GET["Month"]."&Day=".$_GET["Day"]."&Channel=".$linklesz."\">".$segedtomb[$i]."</a><br/>\n";
+        $channelsArray = array_values($tomb[$network][$year][$month][$day]);
+        sort($channelsArray);
+        foreach($channelsArray as $channel) {
+            if (!empty($channel)) {
+                $channel_link = preg_replace("/\#/", "!pound", $channel); // Kodolja a # jelet mert az anchor miatt bekavar.
+                $channel_link = preg_replace("/\+/", "!plus", $channel_link);       // Atalakitjuk a + jelet mert ezt atkene.
+                $logkiirlesz .= "<a href=\"".$webpath."?Network=".$network."&Year=".$year."&Month=".$month."&Day=".$day."&Channel=".$channel_link."\">".$channel."</a><br/>\n";
             }
         }
     }
@@ -57,15 +78,14 @@ if(!empty($_GET))
         // && array_key_exists($_GET["Channel"], $tomb[$_GET["Network"]][$_GET["Year"]][$_GET["Month"]][$_GET["Day"]])
         )
     {
-        $logfile = preg_replace("/!pound/", "#", $_GET["Channel"]);
-        $logfile = preg_replace("/!plus/", "+", $logfile);
-        $holalog2 = $holalog.$_GET["Network"]."_".$logfile."_".$_GET["Year"].$_GET["Month"].$_GET["Day"].".log";
+        $channel = preg_replace("/!pound/", "#", $channel);
+        $channel = preg_replace("/!plus/", "+", $channel);
+        $logfile = $holalog.$network."_".$channel."_".$year.$month.$day.".log";
 
-        if(file_exists($holalog2))
+        if(file_exists($logfile))
         {
-            $ittaszoveg = $holalog2;
             $logkiirlesz .= "<pre>";
-            $dh = fopen($holalog2,"r");
+            $dh = fopen($logfile,"r");
             $logkiir = htmlspecialchars(fread($dh,524288));
             $logkiir = preg_replace("/\n/", "<br/>\n", $logkiir);
             $logkiir = preg_split("/\n/", $logkiir);
@@ -84,10 +104,12 @@ if(!empty($_GET))
         echo "<meta http-equiv='Refresh' content='0; URL=".$webpath."'>";
 }
 else {
-    $segedtomb =  array_keys($tomb);
-    sort($segedtomb);
-    for ($i = 0; $i <= count($tomb); $i++) {
-        $logkiirlesz .=  "<a href=\"".$webpath."?Network=".$segedtomb[$i]."\">".$segedtomb[$i]."</a><br/>\n";
+    $networksArray = array_keys($tomb); // Kiszedem a halozatokat egy tombbe
+    sort($networksArray); // Rendezem a tombot
+    foreach($networksArray as $network) {
+        if (!empty($network)) {
+            $logkiirlesz .=  "<a href=\"".$webpath."?Network=".$network."\">".$network."</a><br/>\n"; // Es kiirom az elemeit
+        }
     }
 }
 ?>
