@@ -17,13 +17,8 @@ foreach ( $TombAmibeBeolvasunk['index'] as $i => $t ) {
     preg_match("/(?P<Network>[^\_]*)[\_](?P<Channel>[\#].*?)[\_](?P<Year>[0-9]{4})[^0-9]*(?P<Month>[0-9]{2})[^0-9]*(?P<Day>[0-9]{2})*[\.]log/",
         $TombAmibeBeolvasunk['unsorted'][$i],
         $hohooegytomb);
-    $tomb[$hohooegytomb["Network"]][$hohooegytomb["Year"]][$hohooegytomb["Month"]][$hohooegytomb["Day"]][$t] = $hohooegytomb["Channel"];
-    $nagytomb["Network"] = $hohooegytomb["Network"];
-    $nagytomb["Year"] = $hohooegytomb["Year"];
-    $nagytomb["Month"] = $hohooegytomb["Month"];
-    $nagytomb["Day"] = $hohooegytomb["Day"];
-    $nagytomb["Modify"] = $t;
-    $nagytomb["Channel"] = $hohooegytomb["Channel"];
+    $tomb[$hohooegytomb["Network"]][$hohooegytomb["Year"]][$hohooegytomb["Month"]][$hohooegytomb["Day"]][$i][] = $hohooegytomb["Channel"];
+    $tomb[$hohooegytomb["Network"]][$hohooegytomb["Year"]][$hohooegytomb["Month"]][$hohooegytomb["Day"]][$i][] = $t;
 }
 
 function fixEncoding($in_str) 

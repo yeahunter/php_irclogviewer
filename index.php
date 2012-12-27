@@ -61,13 +61,13 @@ if(!empty($_GET))
         && array_key_exists($_GET["Day"], $tomb[$_GET["Network"]][$_GET["Year"]][$_GET["Month"]])
         )
     {
-        $channelsArray = array_values($tomb[$network][$year][$month][$day]);
+        $channelsArray = $tomb[$network][$year][$month][$day];
         sort($channelsArray);
         foreach($channelsArray as $channel) {
             if (!empty($channel)) {
                 $channel_link = preg_replace("/\#/", "!pound", $channel); // Kodolja a # jelet mert az anchor miatt bekavar.
                 $channel_link = preg_replace("/\+/", "!plus", $channel_link);       // Atalakitjuk a + jelet mert ezt atkene.
-                $logkiirlesz .= "<a href=\"".$webpath."?Network=".$network."&Year=".$year."&Month=".$month."&Day=".$day."&Channel=".$channel_link."\">".$channel."</a><br/>\n";
+                $logkiirlesz .= "<a href=\"".$webpath."?Network=".$network."&Year=".$year."&Month=".$month."&Day=".$day."&Channel=".$channel_link."\">".$channel[0]."</a> - ".date("H:i:s", $channel[1])."<br/>\n";
             }
         }
     }
