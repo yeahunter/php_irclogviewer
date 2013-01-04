@@ -87,13 +87,12 @@ if(!empty($_GET))
             $logkiirlesz .= "<pre>";
             $dh = fopen($logfile,"r");
             $logkiir = htmlspecialchars(fread($dh,524288));
-            $logkiir = preg_replace("/\n/", "<br/>\n", $logkiir);
             $logkiir = preg_split("/\n/", $logkiir);
             $logkiir_counter = count($logkiir)-2;
             for ($ii = 0; $ii <= $logkiir_counter; $ii++)
             {
                 $anchor = $ii+1;
-                $logkiirlesz .= "<a name=\"".$anchor."\" href=\"".$_SERVER["REQUEST_URI"]."#".$anchor."\">".$anchor."</a>\t".fixEncoding($logkiir[$ii]);
+                $logkiirlesz .= "<a name=\"".$anchor."\" href=\"".$_SERVER["REQUEST_URI"]."#".$anchor."\">".$anchor."</a>\t".makeClickableLinks(fixEncoding($logkiir[$ii]))."\n";
             }
             $logkiirlesz .= "</pre>";
         }
